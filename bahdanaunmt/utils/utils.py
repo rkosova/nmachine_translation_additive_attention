@@ -3,6 +3,7 @@
 
 from __future__ import unicode_literals, print_function, division
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 import unicodedata
 import re
@@ -198,6 +199,31 @@ def evaluate(encoder, decoder, sentence, input_lang, output_lang, device='cuda')
     return decoded_words, decoder_attn
 
 
+def showAttention(input_sentence, output_words, attentions):
+    # attentions = attentions.view(len(output_words), 10)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    cax = ax.matshow(attentions.cpu().numpy(), cmap='bone')
+    fig.colorbar(cax)
+
+    # Set up axes
+    ax.set_xticklabels([''] + input_sentence.split(' ') +
+                       ['<EOS>'], rotation=90)
+    ax.set_yticklabels([''] + output_words)
+
+    # Show label at every tick
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
+
+    plt.savefig(f'attention{random.random()}.png')
+
+
+def evaluateAndShowAttention(encoder, decoder, input_lang, output_lang, input_sentence):
+    output_words, attentions = evaluate(encoder, decoder, input_sentence, input_lang, output_lang)
+    print('input =', input_sentence)
+    print('output =', ' '.join(output_words))
+    showAttention(input_sentence, output_words, attentions)
+
 
 def evaluateRandomly(encoder, decoder, pairs, input_lang, output_lang, n=5, device='cuda'):
     encoder.eval()
@@ -210,6 +236,7 @@ def evaluateRandomly(encoder, decoder, pairs, input_lang, output_lang, n=5, devi
         output_sentence = ' '.join(output_words)
         print('ai:', output_sentence)
         print('')
+    return pair
 
 
 def train(in_lang, out_lang, path, max_s_len=20, batch=32, n_epochs=50, learning_rate=1e-3, hidden_size=128, dropout_p=0.1, device='cuda'):
@@ -236,6 +263,7 @@ def train(in_lang, out_lang, path, max_s_len=20, batch=32, n_epochs=50, learning
     print()
 
     print("Random evaluation:")
-    evaluateRandomly(encoder, decoder, pairs, lang1, lang2)
+    lp = evaluateRandomly(encoder, decoder, pairs, lang1, lang2)
+    evaluateAndShowAttention(encoder, decoder, lang1, lang2, lp[0])
 
     return encoder, decoder
