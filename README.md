@@ -8,21 +8,29 @@ This project implements Bahdanau attention, a mechanism that enhances neural mac
 
 ### Implementation
 
-(1) The energy vector $e$ is calculated as:
+(1) The energy vector $e_i$ is calculated as:
 
 $$
-e = V\tanh(W_qQ + W_kK)
+e_i = V\tanh(W_qQ_{i-1} + W_kK)
 $$
 
-where $V$, $W_q$, and $W_k$ are learnable weights, $Q$ is the decoder's previous hidden state (query vector), $K$ is the encoder's output (key matrix), and $\tanh$ is used to introduce non-linearity.
+where $V$, $W_q$, and $W_k$ are learnable weights, $Q_{i-1}$ is the decoder's previous hidden state (query vector), $K$ is the encoder's output (key matrix), and $\tanh$ is used to introduce non-linearity.
 
 (2) The attention vector $\alpha$ is generated using the softmax function:
 
 $$
-\alpha = softmax(e)
+\alpha_i = softmax(e)
 $$
 
 The softmax operation transforms the energy vector into a valid probability distribution, representing the attention weights.
+
+(3) The context vector $c_i$ is calculated as:
+
+$$
+c_i = \sum_{j=1}^{T_x}\alpha_i K_j
+$$
+
+The context vector $c_i$ is the weighted sum of the encoder outputs.
 
 This is the mechanism enables the model to dynamically weigh the importance of different parts of the input sequence based on the current decoding context.
 
