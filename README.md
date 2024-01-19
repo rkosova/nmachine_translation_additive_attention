@@ -27,7 +27,7 @@ The softmax operation transforms the energy vector into a valid probability dist
 (3) The context vector $c_i$ is calculated as:
 
 $$
-c_i = \sum_{j=1}^{T_x}\alpha_i K_j
+c_i = \sum_{j=1}^{T_x}\alpha_{ij} K_j
 $$
 
 The context vector $c_i$ is the weighted sum of the encoder outputs.
