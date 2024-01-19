@@ -19,7 +19,7 @@ where $V$, $W_q$, and $W_k$ are learnable weights, $Q_{i-1}$ is the decoder's pr
 (2) The attention vector $\alpha$ is generated using the softmax function:
 
 $$
-\alpha_i = softmax(e)
+\alpha_i = softmax(e_i)
 $$
 
 The softmax operation transforms the energy vector into a valid probability distribution, representing the attention weights.
