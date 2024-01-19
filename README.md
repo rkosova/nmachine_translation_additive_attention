@@ -14,7 +14,7 @@ $$
 e = V\tanh(W_qQ + W_kK)
 $$
 
-where $V$, $W_q$, and $W_k$ are learnable weights, $Q$ is the decoder's previous hidden state (query vector),$K$ is the encoder's output (key matrix), and $\tanh$ is used to introduce non-linearity.
+where $V$, $W_q$, and $W_k$ are learnable weights, $Q$ is the decoder's previous hidden state (query vector), $K$ is the encoder's output (key matrix), and $\tanh$ is used to introduce non-linearity.
 
 (2) The attention vector $\alpha$ is generated using the softmax function:
 
